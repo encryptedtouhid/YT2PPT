@@ -3,15 +3,17 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35004.147
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YT2PP.Web", "YT2PP.Web\YT2PP.Web.csproj", "{5399E69E-DE32-4926-A26A-ECA0AF5CE5A3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YT2PP.Web", "YT2PP.Web\YT2PP.Web.csproj", "{5399E69E-DE32-4926-A26A-ECA0AF5CE5A3}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YT2PP.Common", "YT2PP.Common\YT2PP.Common.csproj", "{C204A65C-C0EA-4FFD-A948-FD21435A301C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YT2PP.Common", "YT2PP.Common\YT2PP.Common.csproj", "{C204A65C-C0EA-4FFD-A948-FD21435A301C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YT2PP.Configuration", "YT2PP.Configuration\YT2PP.Configuration.csproj", "{EB3059A8-4D8D-4938-A598-D36B4E6DB4FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YT2PP.Configuration", "YT2PP.Configuration\YT2PP.Configuration.csproj", "{EB3059A8-4D8D-4938-A598-D36B4E6DB4FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YT2PP.Services", "YT2PP.Services\YT2PP.Services.csproj", "{02FFC379-ADBE-479D-A454-F772B37161A5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YT2PP.Services", "YT2PP.Services\YT2PP.Services.csproj", "{02FFC379-ADBE-479D-A454-F772B37161A5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YT2PP.Repositories", "YT2PP.Repositories\YT2PP.Repositories.csproj", "{8313DDF0-D9C4-41B2-AF6D-6ADCA2980B93}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YT2PP.Repositories", "YT2PP.Repositories\YT2PP.Repositories.csproj", "{8313DDF0-D9C4-41B2-AF6D-6ADCA2980B93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YT2PP.Models", "YT2PP.Models\YT2PP.Models.csproj", "{5353CC11-3832-4FE2-B712-4CA6297ABD49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{8313DDF0-D9C4-41B2-AF6D-6ADCA2980B93}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8313DDF0-D9C4-41B2-AF6D-6ADCA2980B93}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8313DDF0-D9C4-41B2-AF6D-6ADCA2980B93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5353CC11-3832-4FE2-B712-4CA6297ABD49}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5353CC11-3832-4FE2-B712-4CA6297ABD49}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5353CC11-3832-4FE2-B712-4CA6297ABD49}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5353CC11-3832-4FE2-B712-4CA6297ABD49}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
