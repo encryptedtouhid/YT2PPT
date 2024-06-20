@@ -15,5 +15,11 @@ namespace YT2PP.Models
 
         public string AppOwnerUrl { get; set; }
 
+        public string AppCode { get; set; }
+
+        public string AppName { get; set; }
+
+
+
     }
 }
