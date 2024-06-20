@@ -8,6 +8,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\YT2PP.Models\YT2PP.Models.csproj" />
+    <ProjectReference Include="..\YT2PP.Services\YT2PP.Services.csproj" />
   </ItemGroup>
 
   <ItemGroup>

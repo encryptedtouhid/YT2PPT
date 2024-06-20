@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using YT2PP.Models;
 
+
 namespace YT2PP.Web
 {
     public class Program
@@ -11,6 +12,8 @@ namespace YT2PP.Web
 
             // Getting Configuration data from appsetting.json
             builder.Services.Configure<AppSettings>(builder.Configuration);
+
+            builder.Services.AddScoped<IYTService, YTService>();
 
             // Add services to the container.
             builder.Services.AddControllersWithViews(options =>
