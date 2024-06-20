@@ -1,3 +1,5 @@
+using YT2PP.Models;
+
 namespace YT2PP.Web
 {
     public class Program
@@ -6,6 +8,8 @@ namespace YT2PP.Web
         {
             var builder = WebApplication.CreateBuilder(args);
 
+            // Getting Configuration data from appsetting.json
+            builder.Services.Configure<AppSettings>(builder.Configuration);
             // Add services to the container.
             builder.Services.AddControllersWithViews();
 
