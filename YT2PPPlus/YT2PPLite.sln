@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YT2PP.Services", "YT2PP.Ser
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YT2PP.Repositories", "YT2PP.Repositories\YT2PP.Repositories.csproj", "{8313DDF0-D9C4-41B2-AF6D-6ADCA2980B93}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "YT2PP.Models", "YT2PP.Models\YT2PP.Models.csproj", "{5353CC11-3832-4FE2-B712-4CA6297ABD49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "YT2PP.Models", "YT2PP.Models\YT2PP.Models.csproj", "{5353CC11-3832-4FE2-B712-4CA6297ABD49}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

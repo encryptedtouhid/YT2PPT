@@ -21,7 +21,7 @@
             <form id="youtubeForm" name="youtubeForm" asp-controller="Home" asp-action="Extract">
                 @Html.AntiForgeryToken()
                 <div class="form-group">
-                    <label asp-for="DataInput" class="control-label" class="h1">Convert Youtube Video to PowerPoint Free </label>
+                    <h1 asp-for="DataInput" class="control-label" class="h1">Convert Youtube Video to PowerPoint Free </h1>
                     @Html.TextBoxFor(model => model.DataInput, new { @class = "form-control form-control-lg mt-3", placeholder = "Paste your YouTube link here", style = "font-size: 1.6rem;" })
                     <span asp-validation-for="DataInput" class="text-danger"></span>
                     
