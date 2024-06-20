@@ -1,6 +1,9 @@
-﻿@{
+﻿@using YT2PP.Models
+@model DataInputViewModel
+@{
     ViewData["Title"] = "Home Page";
 }
+
 
 ﻿<div class="container">
     <div class="row logomargintop">
@@ -16,9 +19,12 @@
     <div class="row justify-content-center mt-5" >
         <div class="col-md-10 text-center">
             <form id="youtubeForm" name="youtubeForm" asp-controller="Home" asp-action="Extract">
+                @Html.AntiForgeryToken()
                 <div class="form-group">
-                    <label for="youtubeLink" class="h1">Convert Youtube Video to PowerPoint Free </label>
-                    <input type="text" id="youtubeLink" name="youtubeLink" class="form-control form-control-lg mt-3" placeholder="Paste your YouTube link here" style="font-size: 1.6rem;">
+                    <label asp-for="DataInput" class="control-label" class="h1">Convert Youtube Video to PowerPoint Free </label>
+                    @Html.TextBoxFor(model => model.DataInput, new { @class = "form-control form-control-lg mt-3", placeholder = "Paste your YouTube link here", style = "font-size: 1.6rem;" })
+                    <span asp-validation-for="DataInput" class="text-danger"></span>
+                    
                 </div>
                 <div class="form-group text-center" style="margin:1em;">
                     <button type="submit" class="btn btn-primary btn-lg">Convert</button>
@@ -27,3 +33,9 @@
         </div>
     </div>
 </div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

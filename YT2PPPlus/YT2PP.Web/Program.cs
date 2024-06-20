@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Mvc;
 using YT2PP.Models;
 
 namespace YT2PP.Web
@@ -10,8 +11,12 @@ namespace YT2PP.Web
 
             // Getting Configuration data from appsetting.json
             builder.Services.Configure<AppSettings>(builder.Configuration);
+
             // Add services to the container.
-            builder.Services.AddControllersWithViews();
+            builder.Services.AddControllersWithViews(options =>
+            {
+                options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
+            });
 
             var app = builder.Build();
 

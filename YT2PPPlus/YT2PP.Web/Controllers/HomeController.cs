@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using YT2PP.Web.Models;
 
+
 namespace YT2PP.Web.Controllers
 {
     public class HomeController : Controller
@@ -27,6 +28,13 @@ namespace YT2PP.Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Extract(DataInputViewModel model)
+        {
+            return View();
         }
     }
 }
