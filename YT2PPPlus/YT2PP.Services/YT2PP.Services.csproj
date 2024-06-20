@@ -14,4 +14,8 @@
     <PackageReference Include="YoutubeExplode" Version="6.3.16" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\YT2PP.Models\YT2PP.Models.csproj" />
+  </ItemGroup>
+
 </Project>
