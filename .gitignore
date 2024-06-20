@@ -362,5 +362,5 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-/YT2PPPlus/YT2PP.Web/appsettings.json
-/YT2PPPlus/YT2PP.Web/appsettings.json
+/src/YT2PP.Web/appsettings.json
+/src/YT2PP.Web/appsettings.json
