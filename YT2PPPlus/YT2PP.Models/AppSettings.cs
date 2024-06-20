@@ -10,5 +10,10 @@ namespace YT2PP.Models
         public string YouTubeApiKey { get; set; }
 
         public TimeSpan FreeLimit { get; set; }
+
+        public string AppOwner { get; set; }
+
+        public string AppOwnerUrl { get; set; }
+
     }
 }
