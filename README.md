@@ -13,6 +13,9 @@ Youtube Video  to Power Point Converter
       "AppOwner": "Khaled Md Tuhidul Hossain",
       "AppOwnerUrl": "https://tuhidulhossain.com",
       "YouTubeApiKey": "Some Key",
+      "ConnectionStrings": {
+           "DefaultConnection": "connection string"
+       },
       "FreeLimit": "00:15:00",
       "Logging": {
         "LogLevel": {
