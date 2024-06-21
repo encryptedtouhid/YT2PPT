@@ -8,6 +8,12 @@ using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 using YT2PP.Models;
 using System.Xml;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
+using System.IO;
+using System.Collections.Generic;
+using System.Security.Cryptography;
+
 
 
 namespace YT2PP.Services.Implementations
@@ -67,5 +73,82 @@ namespace YT2PP.Services.Implementations
                 return TimeSpan.Zero;
             }
         }
+
+        public string GetYouTubeVideoId(string url)
+        {
+            string pattern = "(?<=watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%\u200C\u200B2F|youtu.be%2F|\\/v%2F|e%2F|watch\\?v=|&v=|\\?v=)([^#\\&\\?\\n]*[^\\&\\?\\n])";
+            Match match = Regex.Match(url, pattern);
+
+            if (match.Success)
+            {
+                return match.Groups[1].Value;
+            }
+
+            return null;
+        }
+
+   
+        private static void DeleteDuplicateImages(string directoryPath)
+        {
+            // Get all image files from the directory
+            string[] imageFiles = Directory.GetFiles(directoryPath, "*.png");
+
+            // Dictionary to store image hashes
+            Dictionary<string, string> imageHashes = new Dictionary<string, string>();
+
+            foreach (var imageFile in imageFiles)
+            {
+                string hash = GetImageHash(imageFile);
+
+                // If the hash already exists, delete the file
+                if (imageHashes.ContainsValue(hash))
+                {
+                    Console.WriteLine($"Duplicate found: {imageFile}");
+                    File.Delete(imageFile);
+                }
+                else
+                {
+                    imageHashes.Add(imageFile, hash);
+                }
+            }
+        }
+        // Function to compute the hash of an image file
+        private static string GetImageHash(string imagePath)
+        {
+            using (var md5 = MD5.Create())
+            {
+                using (var stream = File.OpenRead(imagePath))
+                {
+                    byte[] hash = md5.ComputeHash(stream);
+                    return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+                }
+            }
+        }
+
+        public void ExtractFramesFromStreamAsync(string streamUrl, string outputDirectory)
+        {
+
+            if (!Directory.Exists(outputDirectory))
+            {
+                Directory.CreateDirectory(outputDirectory);
+            }
+
+            var ffmpegProcess = new Process
+            {
+                StartInfo = new ProcessStartInfo
+                {
+                    FileName = "ffmpeg",
+                    Arguments = $"-i \"{streamUrl}\" -vf \"select='eq(n\\,0)+gt(scene,0.01)',fps=1\" -vsync vfr {Path.Combine(outputDirectory, "frame_%03d.png")}",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                }
+            };
+
+            ffmpegProcess.Start();
+            ffmpegProcess.WaitForExit(); // Await the process to finish
+
+            DeleteDuplicateImages(outputDirectory);
+        }       
     }
 }

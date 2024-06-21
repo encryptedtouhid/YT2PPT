@@ -16,7 +16,7 @@ namespace YT2PP.Web
             builder.Services.Configure<AppSettings>(builder.Configuration);
 
             builder.Services.AddScoped<IYTService, YTService>();
-
+            builder.Services.AddScoped<IPPTService, PPTService>();
             // Add services to the container.
             builder.Services.AddControllersWithViews(options =>
             {
