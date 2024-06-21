@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using YT2PP.Models;
 using YT2PP.Services.Implementations;
 using YT2PP.Services.Interfaces;
+using NToastNotify;
+using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
 
 
 namespace YT2PP.Web
@@ -17,11 +19,13 @@ namespace YT2PP.Web
 
             builder.Services.AddScoped<IYTService, YTService>();
             builder.Services.AddScoped<IPPTService, PPTService>();
+            builder.Services.AddMvc().AddNToastNotifyToastr();
             // Add services to the container.
             builder.Services.AddControllersWithViews(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
             });
+           
 
             var app = builder.Build();
 
@@ -35,6 +39,7 @@ namespace YT2PP.Web
             app.UseRouting();
 
             app.UseAuthorization();
+            app.UseNToastNotify();
 
             app.MapControllerRoute(
                 name: "default",

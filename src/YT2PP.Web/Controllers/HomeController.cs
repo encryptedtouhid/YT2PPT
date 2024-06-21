@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using NToastNotify;
 using System.Diagnostics;
 using YT2PP.Services.Interfaces;
 using YT2PP.Web.Models;
@@ -11,11 +12,13 @@ namespace YT2PP.Web.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly IYTService _iYTService;
         private readonly IPPTService _pPTService;
-        public HomeController(ILogger<HomeController> logger, IYTService yTService, IPPTService pPTService)
+        private readonly IToastNotification _toastNotification;
+        public HomeController(ILogger<HomeController> logger, IYTService yTService, IPPTService pPTService, IToastNotification toastNotification)
         {
             _logger = logger;
             _iYTService = yTService;
             _pPTService = pPTService;
+            _toastNotification = toastNotification;
         }
 
         public IActionResult Index()
@@ -25,6 +28,19 @@ namespace YT2PP.Web.Controllers
 
         public IActionResult Privacy()
         {
+            //Success
+            _toastNotification.AddSuccessToastMessage("Same for success message");
+            // Success with default options (taking into account the overwritten defaults when initializing in Startup.cs)
+            _toastNotification.AddSuccessToastMessage();
+
+            //Info
+            _toastNotification.AddInfoToastMessage();
+
+            //Warning
+            _toastNotification.AddWarningToastMessage();
+
+            //Error
+            _toastNotification.AddErrorToastMessage();
             return View();
         }
 
