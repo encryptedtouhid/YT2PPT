@@ -16,7 +16,7 @@ namespace YT2PP.Web.Middlewares
         public async Task InvokeAsync(HttpContext context, ApplicationDbContext dbContext)
         {
             // Check if the request path matches the specific method you want to log
-            if (context.Request.Path.Value.Contains("/Home/SpecificMethod"))
+            if (context.Request.Path.Value.Contains("/Home/Extract"))
             {
                 var userDetails = new UserDetails
                 {
