@@ -17,4 +17,18 @@
     </Content>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Output\Frames\" />
+    <Folder Include="Output\Powerpoints\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Output\Frames\readme.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="Output\Powerpoints\readme.md">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>
