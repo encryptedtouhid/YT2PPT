@@ -77,8 +77,8 @@ namespace YT2PP.Web.Controllers
                     _pPTService.CreatePresentation(pptOutputPath, frameOutputPath);
 
                     byte[] pptBytes = System.IO.File.ReadAllBytes(pptOutputPath);
-                    _toastNotification.AddSuccessToastMessage("Convertion Success. Enjoy!");
-                    return File(pptBytes, "application/octet-stream", videoId + ".pptx");
+                   
+                    return File(pptBytes, "application/vnd.openxmlformats-officedocument.presentationml.presentation", videoId + ".pptx");
                 }
                 catch (AggregateException ex)
                 {
