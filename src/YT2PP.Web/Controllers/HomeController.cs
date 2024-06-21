@@ -87,6 +87,8 @@ namespace YT2PP.Web.Controllers
                 catch (Exception ex)
                 {
                     _logger.LogError(ex.StackTrace.ToString());
+                    string message = $"Failed to extract PowerPoint. Try Again Later.";
+                    _toastNotification.AddErrorToastMessage(message);
                     return BadRequest("Failed to extract PowerPoint: " + ex.Message);
                 }
             }
