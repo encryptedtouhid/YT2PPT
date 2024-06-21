@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using NToastNotify;
+using System.Collections;
 using System.Diagnostics;
 using YT2PP.Services.Interfaces;
 using YT2PP.Web.Models;
@@ -13,6 +14,7 @@ namespace YT2PP.Web.Controllers
         private readonly IYTService _iYTService;
         private readonly IPPTService _pPTService;
         private readonly IToastNotification _toastNotification;
+
         public HomeController(ILogger<HomeController> logger, IYTService yTService, IPPTService pPTService, IToastNotification toastNotification)
         {
             _logger = logger;
@@ -56,47 +58,47 @@ namespace YT2PP.Web.Controllers
         {
             string streamUrl = string.Empty;
             string videoId = string.Empty;
+            string VideoURL = model.DataInput;
+            videoId = _iYTService.GetYouTubeVideoId(VideoURL);
 
-
-            if (model != null)
+            if (_iYTService.ValidateVideoLength(videoId))
             {
-                string VideoURL = model.DataInput;
-                videoId = _iYTService.GetYouTubeVideoId(VideoURL);
 
-                if (_iYTService.ValidateVideoLength(videoId))
+                string frameOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "Output", "Frames", videoId);
+                string pptOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "Output", "Powerpoints", videoId + ".pptx");
+                try
                 {
-                    string frameOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "Output", "Frames", videoId);
-                    string pptOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "Output", "Powerpoints", videoId + ".ppt");
-                    try
-                    {
-                        var Streamtask = _iYTService.GetStreamUrlAsync(VideoURL);
-                        Streamtask.Wait();
-                        streamUrl = Streamtask.Result;
-                        
-                        _iYTService.ExtractFramesFromStreamAsync(streamUrl, frameOutputPath);
-                        
-                        _pPTService.CreatePresentation(pptOutputPath, frameOutputPath);
-                        // Read the PowerPoint file into a byte array
-                        byte[] pptBytes = System.IO.File.ReadAllBytes(pptOutputPath);
-                        // Return the byte array as a file download
-                        return File(pptBytes, "application/octet-stream", videoId + ".pptx");
-                    }
-                    catch (AggregateException ex)
-                    {
-                        throw ex.InnerExceptions.First();
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogError(ex.StackTrace.ToString());
-                        return BadRequest("Failed to extract PowerPoint: " + ex.Message);
-                    }
+                    var Streamtask = _iYTService.GetStreamUrlAsync(VideoURL);
+                    Streamtask.Wait();
+                    streamUrl = Streamtask.Result;
+
+                    _iYTService.ExtractFramesFromStreamAsync(streamUrl, frameOutputPath);
+
+                    _pPTService.CreatePresentation(pptOutputPath, frameOutputPath);
+
+                    byte[] pptBytes = System.IO.File.ReadAllBytes(pptOutputPath);
+                    _toastNotification.AddSuccessToastMessage("Convertion Success. Enjoy!");
+                    return File(pptBytes, "application/octet-stream", videoId + ".pptx");
                 }
-                else
+                catch (AggregateException ex)
                 {
-
-                }               
+                    throw ex.InnerExceptions.First();
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogError(ex.StackTrace.ToString());
+                    return BadRequest("Failed to extract PowerPoint: " + ex.Message);
+                }
             }
-            return View();
+            else
+            {
+
+                string message = $"Cannot convert the YouTube video because it is longer than 15 minutes";
+                _toastNotification.AddErrorToastMessage(message);
+                return RedirectToAction("Index");
+            }
+
         }
+         
     }
 }
