@@ -83,12 +83,15 @@ namespace YT2PP.Web.Controllers
                 catch (AggregateException ex)
                 {
                     throw ex.InnerExceptions.First();
+                    string messageExp = $"Failed to extract PowerPoint. Try Again Later.";
+                    _toastNotification.AddErrorToastMessage(messageExp);
+                    return BadRequest("Failed to extract PowerPoint: " + ex.Message);
                 }
                 catch (Exception ex)
                 {
                     _logger.LogError(ex.StackTrace.ToString());
-                    string message = $"Failed to extract PowerPoint. Try Again Later.";
-                    _toastNotification.AddErrorToastMessage(message);
+                    string messageExp2 = $"Failed to extract PowerPoint. Try Again Later.";
+                    _toastNotification.AddErrorToastMessage(messageExp2);
                     return BadRequest("Failed to extract PowerPoint: " + ex.Message);
                 }
             }
