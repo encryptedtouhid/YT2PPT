@@ -54,7 +54,7 @@ namespace YT2PP.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Extract(DataInputViewModel model)
+        public async Task<IActionResult> Extract(DataInputViewModel model)
         {
             string streamUrl = string.Empty;
             string videoId = string.Empty;
