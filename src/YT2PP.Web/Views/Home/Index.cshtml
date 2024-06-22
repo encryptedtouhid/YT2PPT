@@ -50,14 +50,16 @@
                 success: function (response) {
                     console.log('Success:', response);
                     if (response.isSuccess) {
+                        var fileName = response.vId + '.pptx'
                         // If the response is a file download, construct the download URL
-                        var contentType = 'application/vnd.openxmlformats-officedocument.presentationml.presentation'; // for .pptx files
+                        var contentType = 'application/octet-stream'; // for .pptx files
+
                         // Create a blob object from the response
                         var blobUrl = base64ToBlob(response.fileBase64String, contentType);
                         // Create a temporary download link
                         var tempLink = document.createElement('a');
                         tempLink.href = blobUrl;
-                        tempLink.setAttribute('download', getYouTubeVideoId(response.vId) + '.pptx'); // Set the file name here
+                        tempLink.setAttribute('download', fileName); // Set the file name here
                         tempLink.setAttribute('style', 'display: none;');
 
                         // Append the link to body
@@ -72,31 +74,23 @@
                     }
                 },
                 error: function (xhr) {
-                   
+
                 }
-                
+
             });
         });
 
 
-
-        function base64ToBlob(base64, contentType) {
+        // Function to convert base64 to Blob
+        function base64ToBlob(base64, mime) {
             var byteCharacters = atob(base64);
-            var byteArrays = [];
-
-            for (var offset = 0; offset < byteCharacters.length; offset += 512) {
-                var slice = byteCharacters.slice(offset, offset + 512);
-
-                var byteNumbers = new Array(slice.length);
-                for (var i = 0; i < slice.length; i++) {
-                    byteNumbers[i] = slice.charCodeAt(i);
-                }
-
-                var byteArray = new Uint8Array(byteNumbers);
-                byteArrays.push(byteArray);
+            var byteNumbers = new Array(byteCharacters.length);
+            for (var i = 0; i < byteCharacters.length; i++) {
+                byteNumbers[i] = byteCharacters.charCodeAt(i);
             }
-
-            return new Blob(byteArrays, { type: contentType });
+            var byteArray = new Uint8Array(byteNumbers);
+            return new Blob([byteArray], { type: mime });
         }
+
     });
 </script>
