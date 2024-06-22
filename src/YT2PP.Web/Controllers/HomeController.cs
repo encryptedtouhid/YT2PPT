@@ -79,10 +79,9 @@ namespace YT2PP.Web.Controllers
 
                     _pPTService.CreatePresentation(pptOutputPath, frameOutputPath);
 
-                    byte[] pptBytes = System.IO.File.ReadAllBytes(pptOutputPath);
-                   
-                    returnVm.FileBase64String = Convert.ToBase64String(pptBytes);
+
                     returnVm.IsSuccess = true;
+                    returnVm.IsAvailableDownload = true;
                    
                 }
                 catch (AggregateException ex)

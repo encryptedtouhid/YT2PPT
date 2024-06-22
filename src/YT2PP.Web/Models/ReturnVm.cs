@@ -4,7 +4,7 @@
     {
         public string RequestId { get; set; }
 
-        public string FileBase64String { get; set; }
+        public bool IsAvailableDownload { get; set; }
 
         public bool IsSuccess { get; set; }
 

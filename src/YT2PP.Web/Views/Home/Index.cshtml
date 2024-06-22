@@ -29,6 +29,9 @@
                 <div class="form-group text-center" style="margin:1em;">
                     <button type="submit" class="btn btn-primary btn-lg">Convert</button>
                 </div>
+                <div class="form-group text-center" style="margin:1em;">
+                    <button type="button" class="btn btn-danger btn-lg">Download</button>
+                </div>
             </form>
         </div>
     </div>
@@ -50,27 +53,7 @@
                 success: function (response) {
                     console.log('Success:', response);
                     if (response.isSuccess) {
-                        var fileName = response.vId + '.pptx'
-                        // If the response is a file download, construct the download URL
-                        var contentType = 'application/octet-stream'; // for .pptx files
-
-                        // Create a blob object from the response
-                        var blobUrl = base64ToBlob(response.fileBase64String, contentType);
-                        // Create a temporary download link
-                        var tempLink = document.createElement('a');
-                        tempLink.href = blobUrl;
-                        tempLink.setAttribute('download', fileName); // Set the file name here
-                        tempLink.setAttribute('style', 'display: none;');
-
-                        // Append the link to body
-                        document.body.appendChild(tempLink);
-
-                        // Trigger the click event
-                        tempLink.click();
-
-                        // Clean up
-                        document.body.removeChild(tempLink);
-                        window.URL.revokeObjectURL(blobUrl);
+                       
                     }
                 },
                 error: function (xhr) {
