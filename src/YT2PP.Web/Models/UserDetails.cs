@@ -11,6 +11,7 @@ namespace YT2PP.Web.Models
         public string Browser { get; set; }
         public string OperatingSystem { get; set; }
         public string ClickedAt { get; set; }
+        public string YoutubeLink { get; set; }
     }
 
     public class ApplicationDbContext : DbContext
