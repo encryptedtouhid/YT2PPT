@@ -16,7 +16,10 @@
 </head>
 <body>
     <header>
-
+        <!-- Add this in your _Layout.cshtml -->
+        <div id="loading-spinner" style="display:none;">
+            <div class="spinner"></div>
+        </div>
     </header>
     <div class="container">
         <main role="main" class="pb-3">
@@ -29,7 +32,7 @@
             &copy; @DateTime.Now.Year - <a href=@appSettings.Value.AppOwnerUrl target="_blank">@appSettings.Value.AppOwner</a>  -  Version: @appSettings.Value.Version
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)

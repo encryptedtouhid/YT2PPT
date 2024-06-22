@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json.Serialization;
 using NToastNotify;
 using System.Collections;
 using System.Diagnostics;
@@ -54,13 +55,15 @@ namespace YT2PP.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Extract(DataInputViewModel model)
+        public JsonResult Extract(DataInputViewModel model)
         {
             string streamUrl = string.Empty;
             string videoId = string.Empty;
             string VideoURL = model.DataInput;
             videoId = _iYTService.GetYouTubeVideoId(VideoURL);
-
+            ReturnVm returnVm = new ReturnVm();
+            returnVm.RequestId = Guid.NewGuid().ToString();
+            returnVm.VId = videoId;
             if (_iYTService.ValidateVideoLength(videoId))
             {
 
@@ -78,31 +81,36 @@ namespace YT2PP.Web.Controllers
 
                     byte[] pptBytes = System.IO.File.ReadAllBytes(pptOutputPath);
                    
-                    return File(pptBytes, "application/vnd.openxmlformats-officedocument.presentationml.presentation", videoId + ".pptx");
+                    returnVm.FileBase64String = Convert.ToBase64String(pptBytes);
+                    returnVm.IsSuccess = true;
+                   
                 }
                 catch (AggregateException ex)
                 {
-                    throw ex.InnerExceptions.First();
+                    returnVm.IsSuccess = false;
                     string messageExp = $"Failed to extract PowerPoint. Try Again Later.";
                     _toastNotification.AddErrorToastMessage(messageExp);
-                    return BadRequest("Failed to extract PowerPoint: " + ex.Message);
+                  
                 }
                 catch (Exception ex)
                 {
+                    returnVm.IsSuccess = false;
                     _logger.LogError(ex.StackTrace.ToString());
                     string messageExp2 = $"Failed to extract PowerPoint. Try Again Later.";
                     _toastNotification.AddErrorToastMessage(messageExp2);
-                    return BadRequest("Failed to extract PowerPoint: " + ex.Message);
+                   
                 }
+                
             }
             else
             {
-
+                returnVm.IsSuccess = false;
                 string message = $"Cannot convert the YouTube video because it is longer than 15 minutes";
-                _toastNotification.AddErrorToastMessage(message);
-                return RedirectToAction("Index");
+                _toastNotification.AddErrorToastMessage(message);               
+
             }
 
+            return Json(returnVm);
         }
          
     }
