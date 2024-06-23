@@ -3,6 +3,7 @@ using Newtonsoft.Json.Serialization;
 using NToastNotify;
 using System.Collections;
 using System.Diagnostics;
+using YoutubeExplode.Videos;
 using YT2PP.Services.Interfaces;
 using YT2PP.Web.Models;
 
@@ -81,8 +82,7 @@ namespace YT2PP.Web.Controllers
 
 
                     returnVm.IsSuccess = true;
-                    returnVm.IsAvailableDownload = true;
-                   
+                    returnVm.IsAvailableDownload = true;                   
                 }
                 catch (AggregateException ex)
                 {
@@ -112,5 +112,12 @@ namespace YT2PP.Web.Controllers
             return Json(returnVm);
         }
          
+        public ActionResult DownloadFile(string id)
+        {
+            string Id = "";
+            string pptOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "Output", "Powerpoints", Id + ".pptx");
+            byte[] pptBytes = System.IO.File.ReadAllBytes(pptOutputPath);
+            return File(pptBytes, "application/octet-stream", Id + ".pptx");
+        }
     }
 }

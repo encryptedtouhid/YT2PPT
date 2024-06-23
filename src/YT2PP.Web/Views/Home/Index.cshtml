@@ -20,18 +20,33 @@
         <div class="col-md-10 text-center">
             <form id="youtubeForm" name="youtubeForm">
                 @Html.AntiForgeryToken()
-                <div class="form-group">
-                    <h1 asp-for="DataInput" class="control-label">Convert Youtube Video to PowerPoint Free </h1>
-                    @Html.TextBoxFor(model => model.DataInput, new { @class = "form-control form-control-lg mt-3", placeholder = "Paste your YouTube link here", style = "font-size: 1.6rem;" })
+                <h1 asp-for="DataInput" class="control-label">Convert Youtube Video to PowerPoint Free </h1>
+                <div class="form-group" id="inputForm">                   
+                    @Html.TextBoxFor(model => model.DataInput, new { @class = "form-control form-control-lg mt-3", placeholder = "Paste your YouTube link here", style = "font-size: 1.6rem;", id = "datainputText" })
                     <span asp-validation-for="DataInput" class="text-danger"></span>
 
                 </div>
                 <div class="form-group text-center" style="margin:1em;">
-                    <button type="submit" class="btn btn-primary btn-lg">Convert</button>
+                    <button type="submit" class="btn btn-primary btn-lg" id="convertBtn">Convert</button>
                 </div>
-                <div class="form-group text-center" style="margin:1em;">
-                    <button type="button" class="btn btn-danger btn-lg">Download</button>
+
+
+
+
+
+
+
+
+                <div class="form-group" id="outputForm">
+                    <h3 asp-for="DataInput" class="control-label">Your Presentation is ready! </h3>                   
+                    <span asp-validation-for="DataInput" class="text-danger"></span>
+                    <div class="form-group text-center" style="margin:1em;">
+                        <button type="button" class="btn btn-success btn-lg" id="downloadBtn" asp-controller="Home" asp-action="DownloadFile">Download your file</button>
+                    </div>
+
                 </div>
+
+               
             </form>
         </div>
     </div>
@@ -44,6 +59,7 @@
 }
 <script>
     $(document).ready(function () {
+        $('#outputForm').hide();
         $("#youtubeForm").submit(function (event) {
             event.preventDefault(); // Prevent the default form submission
             $.ajax({
@@ -52,8 +68,14 @@
                 data: $(this).serialize(),
                 success: function (response) {
                     console.log('Success:', response);
-                    if (response.isSuccess) {
-                       
+                    if (response.isSuccess) {                       
+                        if (response.isAvailableDownload) {
+                            $('#datainputText').hide();
+                            $('#convertBtn').hide();
+
+                            $('#downloadBtn').attr('data-id', response.vId);
+                            $('#outputForm').show();
+                        }
                     }
                 },
                 error: function (xhr) {
