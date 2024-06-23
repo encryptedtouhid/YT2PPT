@@ -82,7 +82,8 @@ namespace YT2PP.Web.Controllers
 
 
                     returnVm.IsSuccess = true;
-                    returnVm.IsAvailableDownload = true;                   
+                    returnVm.IsAvailableDownload = true;
+                    _toastNotification.AddSuccessToastMessage("Conversion Success!");
                 }
                 catch (AggregateException ex)
                 {
@@ -114,10 +115,9 @@ namespace YT2PP.Web.Controllers
          
         public ActionResult DownloadFile(string id)
         {
-            string Id = "";
-            string pptOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "Output", "Powerpoints", Id + ".pptx");
+            string pptOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "Output", "Powerpoints", id + ".pptx");
             byte[] pptBytes = System.IO.File.ReadAllBytes(pptOutputPath);
-            return File(pptBytes, "application/octet-stream", Id + ".pptx");
+            return File(pptBytes, "application/octet-stream", id + ".pptx");
         }
     }
 }

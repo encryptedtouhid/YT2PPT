@@ -30,18 +30,11 @@
                     <button type="submit" class="btn btn-primary btn-lg" id="convertBtn">Convert</button>
                 </div>
 
-
-
-
-
-
-
-
                 <div class="form-group" id="outputForm">
                     <h3 asp-for="DataInput" class="control-label">Your Presentation is ready! </h3>                   
                     <span asp-validation-for="DataInput" class="text-danger"></span>
                     <div class="form-group text-center" style="margin:1em;">
-                        <button type="button" class="btn btn-success btn-lg" id="downloadBtn" asp-controller="Home" asp-action="DownloadFile">Download your file</button>
+                        <button type="button" class="btn btn-success btn-lg" id="downloadBtn">Download your file</button>
                     </div>
 
                 </div>
@@ -83,6 +76,13 @@
                 }
 
             });
+        });
+
+
+        $('#downloadBtn').click(function () {
+            var dataId = $(this).data('id');
+            // Redirect to download action with fileId as query parameter
+            window.location.href = '@Url.Action("DownloadFile", "Home")?id=' + dataId;
         });
 
 
