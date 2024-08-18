@@ -7,15 +7,15 @@ Youtube Video  to Power Point Converter
 ## Create appsettings.json
 
     {
-      "Version": "1.3.0",
+      "Version": "1.4.0",
       "AppCpde": "YT2PP",
       "AppName": "Convert Youtube Video to PowerPoint",
       "AppOwner": "Khaled Md Tuhidul Hossain",
       "AppOwnerUrl": "https://tuhidulhossain.com",
-      "YouTubeApiKey": "Some Key",
+      "YouTubeApiKey": "[KEY]",
       "ConnectionStrings": {
-           "DefaultConnection": "connection string"
-       },
+        "DefaultConnection": "[DB CONNECTION STRING]"
+      },
       "FreeLimit": "00:15:00",
       "Logging": {
         "LogLevel": {
@@ -25,15 +25,22 @@ Youtube Video  to Power Point Converter
       },
       "AllowedHosts": "*",
       "Serilog": {
-        "Using": [ "Serilog.Sinks.File" ],
+        "Using": [ "Serilog.Sinks.File", "Serilog.Sinks.MSSqlServer" ],
         "MinimumLevel": {
           "Default": "Error"
         },
         "WriteTo": [
           {
+            "Name": "File",
+            "Args": {
+              "path": "[TEXT FILE NAME]",
+              "rollingInterval": "Day"
+            }
+          },
+          {
             "Name": "MSSqlServer",
             "Args": {
-              "connectionString": "connection string",
+              "connectionString": "[DB CONNECTION STRING]",
               "tableName": "Logs",
               "autoCreateSqlTable": true
             }
@@ -41,6 +48,9 @@ Youtube Video  to Power Point Converter
         ]
       }
     }
+
+
+
 
 ## Clean & Build
   Open Visual Studio and build the project. It will restore all the nuget package needed.
