@@ -11,6 +11,7 @@ using YT2PP.Web.Middlewares;
 using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace YT2PP.Web
 {
@@ -20,6 +21,11 @@ namespace YT2PP.Web
         {
 
             var builder = WebApplication.CreateBuilder(args);
+
+            // Configure data protection
+            builder.Services.AddDataProtection()
+                .SetDefaultKeyLifetime(TimeSpan.FromDays(90)) // Set the key lifetime here
+                .PersistKeysToFileSystem(new DirectoryInfo(@"D:\Keys")); // Optional: Persist keys to a file system
 
             // Configure Serilog
             Log.Logger = new LoggerConfiguration()

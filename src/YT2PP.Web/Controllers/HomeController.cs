@@ -55,6 +55,7 @@ namespace YT2PP.Web.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public JsonResult Extract(DataInputViewModel model)
         {
             string streamUrl = string.Empty;

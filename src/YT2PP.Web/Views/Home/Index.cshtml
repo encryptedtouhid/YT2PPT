@@ -19,7 +19,7 @@
     <div class="row justify-content-center mt-5">
         <div class="col-md-10 text-center">
             <form id="youtubeForm" name="youtubeForm">
-                
+                @Html.AntiForgeryToken()
                 <h1 asp-for="DataInput" class="control-label">Convert Youtube Video to PowerPoint Free </h1>
                 <div class="form-group" id="inputForm">                   
                     @Html.TextBoxFor(model => model.DataInput, new { @class = "form-control form-control-lg mt-3", placeholder = "Paste your YouTube link here", style = "font-size: 1.6rem;", id = "datainputText" })
