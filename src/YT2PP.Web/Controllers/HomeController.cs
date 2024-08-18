@@ -88,6 +88,7 @@ namespace YT2PP.Web.Controllers
                 catch (AggregateException ex)
                 {
                     returnVm.IsSuccess = false;
+                    _logger.LogError(ex.StackTrace.ToString());
                     string messageExp = $"Failed to extract PowerPoint. Try Again Later.";
                     _toastNotification.AddErrorToastMessage(messageExp);
                   

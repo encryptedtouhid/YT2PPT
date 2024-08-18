@@ -8,7 +8,9 @@ using YT2PP.Web.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using YT2PP.Web.Middlewares;
-
+using Serilog;
+using Serilog.Events;
+using Serilog.Exceptions;
 
 namespace YT2PP.Web
 {
@@ -16,8 +18,20 @@ namespace YT2PP.Web
     {
         public static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
 
+            // Configure Serilog
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration)
+                .Enrich.FromLogContext()
+                .Enrich.WithThreadId()
+                .Enrich.WithMachineName()
+                .Enrich.WithExceptionDetails()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            builder.Host.UseSerilog();
             // Getting Configuration data from appsetting.json
             builder.Services.Configure<AppSettings>(builder.Configuration);
 
