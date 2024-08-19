@@ -4,8 +4,6 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 using YT2PP.Services.Interfaces;
-using YoutubeExplode;
-using YoutubeExplode.Videos.Streams;
 using YT2PP.Models;
 using System.Xml;
 using System.Text.RegularExpressions;
@@ -13,6 +11,9 @@ using System.Diagnostics;
 using System.IO;
 using System.Collections.Generic;
 using System.Security.Cryptography;
+using Google.Apis.Auth.OAuth2;
+using YoutubeExplode;
+using YoutubeExplode.Videos.Streams;
 
 
 
@@ -24,15 +25,6 @@ namespace YT2PP.Services.Implementations
         public YTService(IOptions<AppSettings> appSettings)
         {
             _appSettings = appSettings.Value;
-        }
-
-        public async Task<string> GetStreamUrlAsync(string videoUrl)
-        {
-            var youtube = new YoutubeClient();
-            var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
-            var streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
-
-            return streamInfo.Url;
         }
 
         public bool ValidateVideoLength(string videoId)
@@ -48,11 +40,24 @@ namespace YT2PP.Services.Implementations
 
         private TimeSpan GetYouTubeVideoDuration(string videoId)
         {
+
             try
             {
+                // Path to your service account JSON key file
+                var serviceAccountCredentialFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Key", "yt2ppt-890bd9106614.json");
+
+                // Load the service account credential
+                GoogleCredential credential;
+                using (var stream = new FileStream(serviceAccountCredentialFilePath, FileMode.Open, FileAccess.Read))
+                {
+                    credential = GoogleCredential.FromStream(stream)
+                        .CreateScoped(YouTubeService.Scope.YoutubeReadonly);
+                }
+
+                // Initialize the YouTubeService with service account credentials
                 var youtubeService = new YouTubeService(new BaseClientService.Initializer()
                 {
-                    ApiKey = this._appSettings.YouTubeApiKey,
+                    HttpClientInitializer = credential,
                     ApplicationName = this._appSettings.AppName
                 });
 
@@ -149,6 +154,15 @@ namespace YT2PP.Services.Implementations
             ffmpegProcess.WaitForExit(); // Await the process to finish
 
             DeleteDuplicateImages(outputDirectory);
-        }       
+        }
+
+        public async Task<string> GetStreamUrlAsync(string videoUrl)
+        {
+            var youtube = new YoutubeClient();
+            var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
+            var streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
+
+            return streamInfo.Url;
+        }
     }
 }
