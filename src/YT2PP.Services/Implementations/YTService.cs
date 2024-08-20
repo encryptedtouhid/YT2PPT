@@ -14,6 +14,7 @@ using System.Security.Cryptography;
 using Google.Apis.Auth.OAuth2;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
+using System.Net.Http;
 
 
 
@@ -158,7 +159,15 @@ namespace YT2PP.Services.Implementations
 
         public async Task<string> GetStreamUrlAsync(string videoUrl)
         {
-            var youtube = new YoutubeClient();
+            var handler = new HttpClientHandler
+            {
+                UseCookies = false
+            };
+
+            // Create HttpClient with the handler
+            var httpClient = new HttpClient(handler);
+            httpClient.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4515.159 Safari/537.36");
+            var youtube = new YoutubeClient(httpClient);
             var streamManifest = await youtube.Videos.Streams.GetManifestAsync(videoUrl);
             var streamInfo = streamManifest.GetMuxedStreams().GetWithHighestVideoQuality();
 
