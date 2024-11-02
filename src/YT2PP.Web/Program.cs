@@ -25,7 +25,7 @@ namespace YT2PP.Web
             // Configure data protection
             builder.Services.AddDataProtection()
                 .SetDefaultKeyLifetime(TimeSpan.FromDays(90)) // Set the key lifetime here
-                .PersistKeysToFileSystem(new DirectoryInfo(@"D:\Keys")); // Optional: Persist keys to a file system
+                .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Keys"))); // Optional: Persist keys to a file system
 
             // Configure Serilog
             Log.Logger = new LoggerConfiguration()
