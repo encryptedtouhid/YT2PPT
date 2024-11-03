@@ -10,7 +10,7 @@
     "bin/Desktop"
   ],
   "name": "YT2PP.Web",
-  "author": "",
+  "author": "Khaled Md Tuhidul Hossain",
   "singleInstance": false,
   "environment": "Production",
   "build": {
