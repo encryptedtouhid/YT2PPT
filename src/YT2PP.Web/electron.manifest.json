@@ -1,0 +1,41 @@
+{
+  "executable": "YT2PP.Web",
+  "args": [
+    "publish",
+    "--project",
+    "D:\\WorkStation\\MyGitHub\\YT2PPT\\src\\YT2PP.Web\\YT2PP.Web.csproj",
+    "--configuration",
+    "Release",
+    "--output",
+    "bin/Desktop"
+  ],
+  "name": "YT2PP.Web",
+  "author": "",
+  "singleInstance": false,
+  "environment": "Production",
+  "build": {
+    "appId": "com.YT2PP.Web.app",
+    "productName": "YT2PP.Web",
+    "copyright": "Copyright © 2020",
+    "buildVersion": "1.0.0",
+    "compression": "maximum",
+    "directories": {
+      "output": "../../../bin/Desktop"
+    },
+    "extraResources": [
+      {
+        "from": "./bin",
+        "to": "bin",
+        "filter": [ "**/*" ]
+      }
+    ],
+    "files": [
+      {
+        "from": "./ElectronHostHook/node_modules",
+        "to": "ElectronHostHook/node_modules",
+        "filter": [ "**/*" ]
+      },
+      "**/*"
+    ]
+  }
+}
