@@ -8,7 +8,10 @@ using YT2PP.Web.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Configuration;
 using YT2PP.Web.Middlewares;
-
+using Serilog;
+using Serilog.Events;
+using Serilog.Exceptions;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace YT2PP.Web
 {
@@ -16,8 +19,25 @@ namespace YT2PP.Web
     {
         public static void Main(string[] args)
         {
+
             var builder = WebApplication.CreateBuilder(args);
 
+            // Configure data protection
+            builder.Services.AddDataProtection()
+                .SetDefaultKeyLifetime(TimeSpan.FromDays(90)) // Set the key lifetime here
+                .PersistKeysToFileSystem(new DirectoryInfo(Path.Combine(AppContext.BaseDirectory, "Keys"))); // Optional: Persist keys to a file system
+
+            // Configure Serilog
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(builder.Configuration)
+                .Enrich.FromLogContext()
+                .Enrich.WithThreadId()
+                .Enrich.WithMachineName()
+                .Enrich.WithExceptionDetails()
+                .WriteTo.Console()
+                .CreateLogger();
+
+            builder.Host.UseSerilog();
             // Getting Configuration data from appsetting.json
             builder.Services.Configure<AppSettings>(builder.Configuration);
 

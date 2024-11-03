@@ -3,7 +3,6 @@ using Newtonsoft.Json.Serialization;
 using NToastNotify;
 using System.Collections;
 using System.Diagnostics;
-using YoutubeExplode.Videos;
 using YT2PP.Services.Interfaces;
 using YT2PP.Web.Models;
 
@@ -55,16 +54,19 @@ namespace YT2PP.Web.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
+        [AutoValidateAntiforgeryToken]
         public JsonResult Extract(DataInputViewModel model)
         {
-            string streamUrl = string.Empty;
             string videoId = string.Empty;
             string VideoURL = model.DataInput;
-            videoId = _iYTService.GetYouTubeVideoId(VideoURL);
             ReturnVm returnVm = new ReturnVm();
             returnVm.RequestId = Guid.NewGuid().ToString();
-            returnVm.VId = videoId;
+            if (!string.IsNullOrEmpty(VideoURL))
+            {
+                videoId = _iYTService.GetYouTubeVideoId(VideoURL);
+                returnVm.VId = videoId;
+            }           
+          
             if (_iYTService.ValidateVideoLength(videoId))
             {
 
@@ -72,9 +74,7 @@ namespace YT2PP.Web.Controllers
                 string pptOutputPath = Path.Combine(Directory.GetCurrentDirectory(), "Output", "Powerpoints", videoId + ".pptx");
                 try
                 {
-                    var Streamtask = _iYTService.GetStreamUrlAsync(VideoURL);
-                    Streamtask.Wait();
-                    streamUrl = Streamtask.Result;
+                    var streamUrl = _iYTService.GetStreamUrlAsync(VideoURL).Result;
 
                     _iYTService.ExtractFramesFromStreamAsync(streamUrl, frameOutputPath);
 
@@ -88,6 +88,7 @@ namespace YT2PP.Web.Controllers
                 catch (AggregateException ex)
                 {
                     returnVm.IsSuccess = false;
+                    _logger.LogError(ex.ToString());
                     string messageExp = $"Failed to extract PowerPoint. Try Again Later.";
                     _toastNotification.AddErrorToastMessage(messageExp);
                   
@@ -95,7 +96,7 @@ namespace YT2PP.Web.Controllers
                 catch (Exception ex)
                 {
                     returnVm.IsSuccess = false;
-                    _logger.LogError(ex.StackTrace.ToString());
+                    _logger.LogError(ex.ToString());
                     string messageExp2 = $"Failed to extract PowerPoint. Try Again Later.";
                     _toastNotification.AddErrorToastMessage(messageExp2);
                    
@@ -119,5 +120,6 @@ namespace YT2PP.Web.Controllers
             byte[] pptBytes = System.IO.File.ReadAllBytes(pptOutputPath);
             return File(pptBytes, "application/octet-stream", id + ".pptx");
         }
+
     }
 }
