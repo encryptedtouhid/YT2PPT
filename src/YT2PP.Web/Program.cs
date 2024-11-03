@@ -12,6 +12,8 @@ using Serilog;
 using Serilog.Events;
 using Serilog.Exceptions;
 using Microsoft.AspNetCore.DataProtection;
+using ElectronNET.API;
+using ElectronNET.API.Entities;
 
 namespace YT2PP.Web
 {
@@ -53,7 +55,7 @@ namespace YT2PP.Web
                 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
             );
 
-
+            builder.WebHost.UseElectron(args);
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
@@ -73,7 +75,25 @@ namespace YT2PP.Web
                 name: "default",
                 pattern: "{controller=Home}/{action=Index}/{id?}");
 
+            if (HybridSupport.IsElectronActive)
+            {
+                CreateElectronWindow();
+            }
             app.Run();
+
+            async void CreateElectronWindow()
+            {
+                var options = new BrowserWindowOptions
+                {
+                    WebPreferences = new WebPreferences
+                    {
+                        NodeIntegration = false,
+                        ContextIsolation = true
+                    }
+                };
+                var window = await Electron.WindowManager.CreateWindowAsync(options);
+                window.OnClosed += () => Electron.App.Quit();
+            }
         }
     }
 }

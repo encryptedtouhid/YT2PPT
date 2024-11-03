@@ -9,9 +9,9 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - YT2PP.Web</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/YT2PP.Web.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="./lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="./css/site.css"/>
+    <link rel="stylesheet" href="./YT2PP.Web.styles.css"/>
     @await Component.InvokeAsync("NToastNotify")
 </head>
 <body>
@@ -32,9 +32,9 @@
             &copy; @DateTime.Now.Year - <a href=@appSettings.Value.AppOwnerUrl target="_blank">@appSettings.Value.AppOwner</a>  -  Version: @appSettings.Value.Version
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js" asp-append-version="true"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="./lib/jquery/dist/jquery.min.js" ></script>
+    <script src="./lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="./js/site.js"></script>
     <script data-name="BMC-Widget" data-cfasync="false" src="https://cdnjs.buymeacoffee.com/1.0.0/widget.prod.min.js" data-id="Encrypted" data-description="Support me on Buy me a coffee!" data-message="Thank you for all your support." data-color="#FFFF00" data-position="Right" data-x_margin="18" data-y_margin="18"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
