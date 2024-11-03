@@ -139,12 +139,13 @@ namespace YT2PP.Services.Implementations
             {
                 Directory.CreateDirectory(outputDirectory);
             }
+            var ffmpegPath = Path.Combine(Directory.GetCurrentDirectory(), "ffmpeg\\bin\\ffmpeg.exe");
 
             var ffmpegProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "ffmpeg",
+                    FileName = ffmpegPath,
                     Arguments = $"-i \"{streamUrl}\" -vf \"select='eq(n\\,0)+gt(scene,0.01)',fps=1\" -vsync vfr {Path.Combine(outputDirectory, "frame_%03d.png")}",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
