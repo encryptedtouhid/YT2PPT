@@ -16,8 +16,8 @@
   "build": {
     "appId": "com.YT2PP.Web.app",
     "productName": "YT2PP.Web",
-    "copyright": "Copyright © 2020",
-    "buildVersion": "1.0.0",
+    "copyright": "Copyright © 2024",
+    "buildVersion": "1.5.0",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop"
