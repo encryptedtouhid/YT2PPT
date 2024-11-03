@@ -15,6 +15,7 @@ using Google.Apis.Auth.OAuth2;
 using YoutubeExplode;
 using YoutubeExplode.Videos.Streams;
 using System.Net.Http;
+using System.Linq;
 
 
 
@@ -45,7 +46,7 @@ namespace YT2PP.Services.Implementations
             try
             {
                 // Path to your service account JSON key file
-                var serviceAccountCredentialFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Key", "yt2ppt-890bd9106614.json");
+                var serviceAccountCredentialFilePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Keys", "yt2ppt-890bd9106614.json");
 
                 // Load the service account credential
                 GoogleCredential credential;
@@ -93,7 +94,7 @@ namespace YT2PP.Services.Implementations
             return null;
         }
 
-   
+
         private static void DeleteDuplicateImages(string directoryPath)
         {
             // Get all image files from the directory
@@ -138,12 +139,13 @@ namespace YT2PP.Services.Implementations
             {
                 Directory.CreateDirectory(outputDirectory);
             }
+            var ffmpegPath = Path.Combine(Directory.GetCurrentDirectory(), "ffmpeg\\bin\\ffmpeg.exe");
 
             var ffmpegProcess = new Process
             {
                 StartInfo = new ProcessStartInfo
                 {
-                    FileName = "ffmpeg",
+                    FileName = ffmpegPath,
                     Arguments = $"-i \"{streamUrl}\" -vf \"select='eq(n\\,0)+gt(scene,0.01)',fps=1\" -vsync vfr {Path.Combine(outputDirectory, "frame_%03d.png")}",
                     RedirectStandardOutput = true,
                     UseShellExecute = false,
@@ -157,7 +159,7 @@ namespace YT2PP.Services.Implementations
             DeleteDuplicateImages(outputDirectory);
         }
 
-        public async Task<string> GetStreamUrlAsync(string videoUrl)
+        public async Task<string> GetStreamUrlNewAsync(string videoUrl)
         {
             var handler = new HttpClientHandler
             {
@@ -173,5 +175,37 @@ namespace YT2PP.Services.Implementations
 
             return streamInfo.Url;
         }
+
+        public async Task<string> GetStreamUrlAsync(string videoUrl)
+        {
+            var youtube = new YoutubeClient();
+            var video = await youtube.Videos.GetAsync(videoUrl);
+
+            // Sanitize the video title to remove invalid characters from the file name
+            string sanitizedTitle = string.Join("_", video.Title.Split(Path.GetInvalidFileNameChars()));
+
+            // Get the stream manifest
+            var streamManifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
+            var muxedStreams = streamManifest.GetMuxedStreams().OrderByDescending(s => s.VideoQuality).ToList();
+
+            if (muxedStreams.Any())
+            {
+                // Return the URL of the highest-quality muxed stream
+                return muxedStreams.First().Url;
+            }
+
+            // Fallback to adaptive streams if no muxed streams are available
+            var audioStream = streamManifest.GetAudioStreams().OrderByDescending(s => s.Bitrate).FirstOrDefault();
+            var videoStream = streamManifest.GetVideoStreams().OrderByDescending(s => s.VideoQuality).FirstOrDefault();
+
+            if (audioStream != null && videoStream != null)
+            {
+                // Return the audio or video stream URL as fallback
+                return videoStream.Url;
+            }
+
+            return null;
+        }
+
     }
 }
