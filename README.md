@@ -50,6 +50,24 @@ Youtube Video  to Power Point Converter
     }
 
 
+## To run the application with Electron.NET as Desktop Application.
+   Replace ~ with a relative path, such as ./ for the current directory or use the root-relative path if Electron has access to the root of the project. For example:
+                
+        <script src="./lib/jquery/dist/jquery.min.js"></script>
+        <script src="./lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="./js/site.js"></script>
+
+Clean The project
+
+      dotnet clean
+      
+Build The project      
+    
+     dotnet build
+
+Run Electron app
+
+      electronize start
 
 
 ## Clean & Build
