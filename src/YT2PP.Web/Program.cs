@@ -83,14 +83,23 @@ namespace YT2PP.Web
 
             async void CreateElectronWindow()
             {
+                // Get the client's primary screen dimensions
+                var screen = await Electron.Screen.GetPrimaryDisplayAsync();
+                var screenSize = screen.Size;
+
+                // Customize the window options based on screen size
                 var options = new BrowserWindowOptions
                 {
+                    Width = screenSize.Width,
+                    Height = screenSize.Height,
                     WebPreferences = new WebPreferences
                     {
                         NodeIntegration = false,
                         ContextIsolation = true
                     }
                 };
+
+                // Create the Electron window with dynamic size
                 var window = await Electron.WindowManager.CreateWindowAsync(options);
                 window.OnClosed += () => Electron.App.Quit();
             }
