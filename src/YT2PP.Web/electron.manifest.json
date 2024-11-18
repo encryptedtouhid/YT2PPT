@@ -20,7 +20,7 @@
     "buildVersion": "1.5.0",
     "compression": "maximum",
     "directories": {
-      "output": "../../../bin/Desktop"
+      "output": "D:\\WorkStation\\ReleaseBox\\YT2PPT"
     },
     "extraResources": [
       {
@@ -36,6 +36,20 @@
         "filter": [ "**/*" ]
       },
       "**/*"
-    ]
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [ "x64" ]
+        }
+      ],
+      "icon": "icon.ico"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    }
   }
 }
