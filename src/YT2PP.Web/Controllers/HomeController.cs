@@ -31,19 +31,6 @@ namespace YT2PP.Web.Controllers
 
         public IActionResult Privacy()
         {
-            //Success
-           // _toastNotification.AddSuccessToastMessage("Same for success message");
-            // Success with default options (taking into account the overwritten defaults when initializing in Startup.cs)
-           // _toastNotification.AddSuccessToastMessage();
-
-            //Info
-           // _toastNotification.AddInfoToastMessage();
-
-            //Warning
-           // _toastNotification.AddWarningToastMessage();
-
-            //Error
-           // _toastNotification.AddErrorToastMessage();
             return View();
         }
 
