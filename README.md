@@ -57,6 +57,10 @@ Youtube Video  to Power Point Converter
         <script src="./lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
         <script src="./js/site.js"></script>
 
+Restore and Build the Application Navigate to your project directory:
+      
+      cd D:\WorkStation\MyGitHub\YT2PPT\src\YT2PP.Web
+
 Clean The project
 
       dotnet clean
@@ -68,6 +72,15 @@ Build The project
 Run Electron app
 
       electronize start
+
+Build the Application Build the project
+
+      dotnet build --configuration Release
+
+Package with Electron.NET Use the Electron.NET CLI to publish the application
+
+      electronize build /target win
+
 
 
 ## Clean & Build
