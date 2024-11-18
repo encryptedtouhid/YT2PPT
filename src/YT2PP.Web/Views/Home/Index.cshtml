@@ -18,7 +18,7 @@
 
     <div class="row justify-content-center mt-5">
         <div class="col-md-10 text-center">
-            <form id="youtubeForm" name="youtubeForm">
+            <form id="youtubeForm" name="youtubeForm" method="post" asp-action="Extract">
                 @Html.AntiForgeryToken()
                 <h1 asp-for="DataInput" class="control-label">Convert Youtube Video to PowerPoint Free </h1>
                 <div class="form-group" id="inputForm">                   
