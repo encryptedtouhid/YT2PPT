@@ -13,11 +13,15 @@
   "author": "Khaled Md Tuhidul Hossain",
   "singleInstance": false,
   "environment": "Production",
+  "server": {
+    "url": "http://localhost:8001",
+    "timeout": 3000
+  },
   "build": {
     "appId": "com.YT2PP.Web.app",
     "productName": "YT2PP.Web",
     "copyright": "Copyright © 2024",
-    "buildVersion": "1.5.0",
+    "buildVersion": "1.6.0",
     "compression": "maximum",
     "directories": {
       "output": "D:\\WorkStation\\ReleaseBox\\YT2PPT"
@@ -49,6 +53,7 @@
     "nsis": {
       "oneClick": false,
       "perMachine": true,
+      "allowElevation": true,
       "allowToChangeInstallationDirectory": true
     }
   }
