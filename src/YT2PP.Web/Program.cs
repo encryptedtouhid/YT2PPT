@@ -1,18 +1,13 @@
-using Microsoft.AspNetCore.Mvc;
-using YT2PP.Models;
-using YT2PP.Services.Implementations;
-using YT2PP.Services.Interfaces;
-using NToastNotify;
-using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;
-using YT2PP.Web.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Configuration;
-using Serilog;
-using Serilog.Events;
-using Serilog.Exceptions;
-using Microsoft.AspNetCore.DataProtection;
-using ElectronNET.API;
 using ElectronNET.API.Entities;
+using ElectronNET.API;
+using Microsoft.AspNetCore.DataProtection;
+using Microsoft.AspNetCore.Mvc;
+using Serilog;
+using System.Security.Principal;
+using Serilog.Exceptions;
+using YT2PP.Services.Interfaces;
+using YT2PP.Services.Implementations;
+using YT2PP.Models; // Add this namespace
 
 namespace YT2PP.Web
 {
@@ -20,7 +15,8 @@ namespace YT2PP.Web
     {
         public static void Main(string[] args)
         {
-
+            // Check for administrator privileges
+           
             var builder = WebApplication.CreateBuilder(args);
 
             // Configure data protection
@@ -49,23 +45,18 @@ namespace YT2PP.Web
             builder.Services.AddControllersWithViews(options =>
             {
                 options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute());
-            });            
+            });
 
             builder.WebHost.UseElectron(args);
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.
-            //if (!app.Environment.IsDevelopment())
-            //{
-            //    app.UseExceptionHandler("/Home/Error");
-            //}
             app.UseStaticFiles();
             app.UseDefaultFiles();
 
             app.UseRouting();
 
             app.UseAuthorization();
-            //app.UseMiddleware<UserDetailsLoggingMiddleware>();
             app.UseNToastNotify();
 
             app.MapControllerRoute(
@@ -80,6 +71,17 @@ namespace YT2PP.Web
 
             async void CreateElectronWindow()
             {
+                if (!IsAdministrator())
+                {
+                    // Display Electron dialog box
+                    await Electron.Dialog.ShowMessageBoxAsync(new MessageBoxOptions("The application requires administrative privileges. Please restart as an administrator.")
+                    {
+                        Type = MessageBoxType.error
+                    });
+                    Electron.App.Quit();
+                    return;
+                }
+
                 // Get the client's primary screen dimensions
                 var screen = await Electron.Screen.GetPrimaryDisplayAsync();
                 var screenSize = screen.Size;
@@ -89,6 +91,7 @@ namespace YT2PP.Web
                 {
                     Width = screenSize.Width,
                     Height = screenSize.Height,
+                    Icon = Path.Combine(AppContext.BaseDirectory, "wwwroot/img/yt2ppt.ico"),
                     WebPreferences = new WebPreferences
                     {
                         NodeIntegration = false,
@@ -98,8 +101,14 @@ namespace YT2PP.Web
 
                 // Create the Electron window with dynamic size
                 var window = await Electron.WindowManager.CreateWindowAsync(options);
-                window.OnClosed += () => Electron.App.Quit();
-            }
+                window.OnClosed += () => Electron.App.Quit();             }
+        }
+
+        private static bool IsAdministrator()
+        {
+            var identity = WindowsIdentity.GetCurrent();
+            var principal = new WindowsPrincipal(identity);
+            return principal.IsInRole(WindowsBuiltInRole.Administrator);
         }
     }
 }

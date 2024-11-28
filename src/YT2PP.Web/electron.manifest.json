@@ -19,7 +19,17 @@
   },
   "build": {
     "appId": "com.YT2PP.Web.app",
-    "productName": "YT2PP.Web",
+    "win": {
+      "requestedExecutionLevel": "requireAdministrator",
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [ "x64" ]
+        }
+      ],
+      "icon": "wwwroot/img/yt2ppt.ico"
+    },
+    "productName": "YT2PPT",
     "copyright": "Copyright © 2024",
     "buildVersion": "1.6.0",
     "compression": "maximum",
@@ -41,15 +51,6 @@
       },
       "**/*"
     ],
-    "win": {
-      "target": [
-        {
-          "target": "nsis",
-          "arch": [ "x64" ]
-        }
-      ],
-      "icon": "icon.ico"
-    },
     "nsis": {
       "oneClick": false,
       "perMachine": true,
