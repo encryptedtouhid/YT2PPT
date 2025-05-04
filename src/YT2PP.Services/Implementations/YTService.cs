@@ -81,17 +81,14 @@ namespace YT2PP.Services.Implementations
             }
         }
 
-        public string GetYouTubeVideoId(string url)
+        public string? GetYouTubeVideoId(string url)
         {
+            if (string.IsNullOrEmpty(url)) return null;
+            
             string pattern = "(?<=watch\\?v=|/videos/|embed\\/|youtu.be\\/|\\/v\\/|\\/e\\/|watch\\?v%3D|watch\\?feature=player_embedded&v=|%2Fvideos%2F|embed%\u200C\u200B2F|youtu.be%2F|\\/v%2F|e%2F|watch\\?v=|&v=|\\?v=)([^#\\&\\?\\n]*[^\\&\\?\\n])";
             Match match = Regex.Match(url, pattern);
 
-            if (match.Success)
-            {
-                return match.Groups[1].Value;
-            }
-
-            return null;
+            return match.Success ? match.Groups[1].Value : null;
         }
 
 
@@ -176,32 +173,38 @@ namespace YT2PP.Services.Implementations
             return streamInfo.Url;
         }
 
-        public async Task<string> GetStreamUrlAsync(string videoUrl)
+        public async Task<string?> GetStreamUrlAsync(string videoUrl)
         {
-            var youtube = new YoutubeClient();
-            var video = await youtube.Videos.GetAsync(videoUrl);
-
-            // Sanitize the video title to remove invalid characters from the file name
-            string sanitizedTitle = string.Join("_", video.Title.Split(Path.GetInvalidFileNameChars()));
-
-            // Get the stream manifest
-            var streamManifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
-            var muxedStreams = streamManifest.GetMuxedStreams().OrderByDescending(s => s.VideoQuality).ToList();
-
-            if (muxedStreams.Any())
+            try
             {
-                // Return the URL of the highest-quality muxed stream
-                return muxedStreams.First().Url;
+                var youtube = new YoutubeClient();
+                var video = await youtube.Videos.GetAsync(videoUrl);
+
+                // Sanitize the video title to remove invalid characters from the file name
+                string sanitizedTitle = string.Join("_", video.Title.Split(Path.GetInvalidFileNameChars()));
+
+                // Get the stream manifest
+                var streamManifest = await youtube.Videos.Streams.GetManifestAsync(video.Id);
+                var muxedStreams = streamManifest.GetMuxedStreams().OrderByDescending(s => s.VideoQuality).ToList();
+
+                if (muxedStreams.Any())
+                {
+                    // Return the URL of the highest-quality muxed stream
+                    return muxedStreams.First().Url;
+                }
+
+                // Fallback to adaptive streams if no muxed streams are available
+                var audioStream = streamManifest.GetAudioStreams().OrderByDescending(s => s.Bitrate).FirstOrDefault();
+                var videoStream = streamManifest.GetVideoStreams().OrderByDescending(s => s.VideoQuality).FirstOrDefault();
+
+                if (videoStream != null)
+                {
+                    return videoStream.Url;
+                }
             }
-
-            // Fallback to adaptive streams if no muxed streams are available
-            var audioStream = streamManifest.GetAudioStreams().OrderByDescending(s => s.Bitrate).FirstOrDefault();
-            var videoStream = streamManifest.GetVideoStreams().OrderByDescending(s => s.VideoQuality).FirstOrDefault();
-
-            if (audioStream != null && videoStream != null)
+            catch (Exception ex)
             {
-                // Return the audio or video stream URL as fallback
-                return videoStream.Url;
+                Console.WriteLine($"Error getting stream URL: {ex.Message}");
             }
 
             return null;
