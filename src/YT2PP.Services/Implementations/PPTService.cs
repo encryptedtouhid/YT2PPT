@@ -22,14 +22,14 @@ namespace YT2PP.Services.Implementations
             {
                 PresentationPart presentationPart = presentationDocument.AddPresentationPart();
 
-                // Add required presentation properties
-                presentationPart.AddNewPart<PresentationPropertiesPart>();
+                // Add required presentation properties with proper initialization
+                PresentationPropertiesPart presentationPropertiesPart = presentationPart.AddNewPart<PresentationPropertiesPart>();
+                presentationPropertiesPart.PresentationProperties = new P.PresentationProperties();
 
                 // Create and configure SlideMasterPart with theme
                 SlideMasterPart slideMasterPart = presentationPart.AddNewPart<SlideMasterPart>();
-                CreateSlideMasterPart(slideMasterPart);
-
-                // Add theme part
+                
+                // Add theme part first
                 ThemePart themePart = slideMasterPart.AddNewPart<ThemePart>();
                 CreateTheme(themePart);
 
@@ -37,8 +37,8 @@ namespace YT2PP.Services.Implementations
                 SlideLayoutPart slideLayoutPart = slideMasterPart.AddNewPart<SlideLayoutPart>();
                 CreateSlideLayoutPart(slideLayoutPart);
 
-                // Set the slide layout relationship ID
-                slideMasterPart.AddPart(slideLayoutPart);
+                // Create slide master after theme and layout are ready
+                CreateSlideMasterPart(slideMasterPart, slideLayoutPart);
 
                 // Set up presentation structure with slide size
                 presentationPart.Presentation = new P.Presentation(
@@ -55,7 +55,22 @@ namespace YT2PP.Services.Implementations
                         Cx = 6858000, 
                         Cy = 9144000 
                     },
-                    new P.DefaultTextStyle()
+                    new P.DefaultTextStyle(),
+                    new P.ViewProperties(
+                        new P.NormalViewProperties(
+                            new P.RestoredLeft() { Size = 15620, AutoAdjust = true },
+                            new P.RestoredTop() { Size = 94660, AutoAdjust = true }
+                        ),
+                        new P.SlideViewProperties(
+                            new P.CommonSlideViewProperties(
+                                new P.CommonViewProperties(),
+                                new P.GuideList()
+                            )
+                        ),
+                        new P.NotesTextViewProperties(
+                            new P.CommonViewProperties()
+                        )
+                    )
                 );
 
                 // Process each image
@@ -81,7 +96,7 @@ namespace YT2PP.Services.Implementations
                         AddImageToSlide(slidePart, slidePart.GetIdOfPart(imagePart));
 
                         // Add to slide list
-                        presentationPart.Presentation.SlideIdList.AppendChild(
+                        presentationPart.Presentation.SlideIdList?.AppendChild(
                             new P.SlideId() { 
                                 Id = slideId++, 
                                 RelationshipId = presentationPart.GetIdOfPart(slidePart) 
@@ -90,12 +105,22 @@ namespace YT2PP.Services.Implementations
                     }
                 }
 
-                // Save the presentation
+                // Add document settings
+                presentationPart.Presentation.Append(
+                    new P.ExtensionList(
+                        new P.Extension()
+                        {
+                            Uri = "{E76CE94A-603C-4142-B9AA-8FBAE5AC3971}"
+                        }
+                    )
+                );
+
+                // Save all parts
                 presentationPart.Presentation.Save();
             }
         }
 
-        private void CreateSlideMasterPart(SlideMasterPart slideMasterPart)
+        private void CreateSlideMasterPart(SlideMasterPart slideMasterPart, SlideLayoutPart slideLayoutPart)
         {
             var slideMaster = new P.SlideMaster(
                 new P.CommonSlideData(
@@ -104,7 +129,7 @@ namespace YT2PP.Services.Implementations
                             new P.NonVisualDrawingProperties() { Id = 1U, Name = "" },
                             new P.NonVisualGroupShapeDrawingProperties(),
                             new P.ApplicationNonVisualDrawingProperties()),
-                        new P.GroupShapeProperties()
+                        new P.GroupShapeProperties(new A.TransformGroup())
                     )
                 ),
                 new P.ColorMap() {
@@ -120,7 +145,10 @@ namespace YT2PP.Services.Implementations
                     Accent6 = D.ColorSchemeIndexValues.Accent6,
                     Hyperlink = D.ColorSchemeIndexValues.Hyperlink,
                     FollowedHyperlink = D.ColorSchemeIndexValues.FollowedHyperlink
-                }
+                },
+                new P.SlideLayoutIdList(
+                    new P.SlideLayoutId() { Id = 2147483649U, RelationshipId = slideMasterPart.GetIdOfPart(slideLayoutPart) }
+                )
             );
             slideMasterPart.SlideMaster = slideMaster;
         }
@@ -135,10 +163,10 @@ namespace YT2PP.Services.Implementations
                             new P.NonVisualGroupShapeDrawingProperties(),
                             new P.ApplicationNonVisualDrawingProperties()
                         ),
-                        new P.GroupShapeProperties()
+                        new P.GroupShapeProperties(new A.TransformGroup())
                     )
                 )
-            );
+            ) { Type = SlideLayoutValues.Blank };
             slideLayoutPart.SlideLayout = slideLayout;
         }
 
@@ -152,7 +180,7 @@ namespace YT2PP.Services.Implementations
                             new P.NonVisualGroupShapeDrawingProperties(),
                             new P.ApplicationNonVisualDrawingProperties()
                         ),
-                        new P.GroupShapeProperties()
+                        new P.GroupShapeProperties(new A.TransformGroup())
                     )
                 )
             );
